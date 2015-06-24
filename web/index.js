@@ -11,7 +11,12 @@ var PointingPoker = function(){
 	var load = function(){
 		var savedRoomKey = localStorage.getItem('pointingpoker:roomkey');
 		var username = localStorage.getItem('pointingpoker:username');
+		var qsRoomKey = getQSValue("room");
+		console.log(qsRoomKey)
 		if(typeof(savedRoomKey) === "string" && savedRoomKey !== ""){
+			if(typeof(qsRoomKey) === "string" && qsRoomKey !== ""){
+				savedRoomKey = qsRoomKey;
+			}
 			document.getElementById("inputRoomKey").value = savedRoomKey;
 			document.getElementById("inputName").focus();
 			if(typeof(username) === "string" && username !== ""){
@@ -33,6 +38,22 @@ var PointingPoker = function(){
 		newUri += "//" + loc.host;
 		newUri += loc.pathname + "member/actions";
 		return newUri;
+	};
+	
+	var getQSValue = function(key){
+		var val = "";
+		var hrefArray = window.location.href.split("?");
+		if(hrefArray.length > 1){
+			var qsArray = hrefArray[1].split("&");
+			var iCount = qsArray.length;
+			for(var i=0; i < iCount; i++){
+				var propArray = qsArray[i].split("=");
+				if(propArray.length === 2 && propArray[0].toLowerCase() === key.toLowerCase()){
+					val = window.unescape(propArray[1]);
+				}
+			}
+		}
+		return val;
 	};
 
 	var onMessage = function (event) {
