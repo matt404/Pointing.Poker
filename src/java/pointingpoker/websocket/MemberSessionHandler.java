@@ -43,12 +43,18 @@ public class MemberSessionHandler {
 	}
 
 	public void addMember(Member member, String roomKey) {
-		if(!members.containsKey(roomKey)){
+		if(members.containsKey(roomKey)){
+			for (Member mbr : members.get(roomKey)) {
+				if (member.getName().toLowerCase().equals(mbr.getName().toLowerCase())) {
+					removeMember(mbr.getId(), roomKey);
+				}
+			}			
+		}else{
 			members.put(roomKey, new HashSet());
 		}
+		memberId++;
 		member.setId(memberId);
 		members.get(roomKey).add(member);
-		memberId++;
 		JsonObject addMessage = createAddMessage(member);
 		sendToAllConnectedSessions(addMessage, roomKey);
 //		if(!member.getObserver()){

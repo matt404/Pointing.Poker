@@ -1,7 +1,7 @@
 
 var PointingPoker = function(){
 	
-	var _socket, _clientKey, _roomKey;
+	var _socket, _clientKey, _roomKey, _memberId;
 	
 	var init = function (){
 		window.onload = load;
@@ -57,7 +57,7 @@ var PointingPoker = function(){
 	};
 
 	var onMessage = function (event) {
-//		console.log(event);
+		console.log(event);
 		var member = JSON.parse(event.data);
 		if (member.action === "add") {
 			printMemberElement(member);
@@ -67,8 +67,14 @@ var PointingPoker = function(){
 			}
 		}
 		if (member.action === "remove") {
-			document.getElementById("memberSpan"+member.id).remove();
-			document.getElementById("memberCardDiv"+member.id).remove();
+			if(parseInt(sessionStorage.getItem('pointingpoker:serverid'),10) === parseInt(member.id,10)){
+				sessionStorage.removeItem('pointingpoker:clientkey');
+				sessionStorage.removeItem('pointingpoker:serverid');
+				document.location.reload();
+			}else{
+				document.getElementById("memberSpan"+member.id).remove();
+				document.getElementById("memberCardDiv"+member.id).remove();
+			}
 		}
 		if (member.action === "vote") {
 			var memberCardDiv = document.getElementById("memberCardDiv"+member.id);

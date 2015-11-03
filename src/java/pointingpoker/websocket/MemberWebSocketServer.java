@@ -30,7 +30,7 @@ public class MemberWebSocketServer {
 	@OnOpen
 	public void open(@PathParam("clientKey") int clientKey, @PathParam("roomKey") String roomKey, Session session) {
 		this.clientKey = clientKey;
-		this.roomKey = roomKey;
+		this.roomKey = roomKey.toLowerCase();
 		sessionHandler.addSession(session, this.roomKey);
 	}
 
