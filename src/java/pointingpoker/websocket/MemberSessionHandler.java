@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class MemberSessionHandler {
 	public void addSession(Session session, String roomKey) {
 		if(!sessions.containsKey(roomKey)){
 			sessions.put(roomKey, new HashSet());
+			Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.INFO, "AddSession");
 		}
 		sessions.get(roomKey).add(session);
 		if(members.containsKey(roomKey)){
@@ -44,11 +46,16 @@ public class MemberSessionHandler {
 
 	public void addMember(Member member, String roomKey) {
 		if(members.containsKey(roomKey)){
-			for (Member mbr : members.get(roomKey)) {
+			
+			Iterator it = members.get(roomKey).iterator();
+			while (it.hasNext()) {
+				Member mbr = (Member)it.next();
+				System.out.println(member.getClientKey());
 				if (member.getName().toLowerCase().equals(mbr.getName().toLowerCase())) {
-					removeMember(mbr.getId(), roomKey);
+					it.remove(); // avoids a ConcurrentModificationException
+					removeMember(mbr, roomKey);
 				}
-			}			
+			}
 		}else{
 			members.put(roomKey, new HashSet());
 		}
@@ -57,11 +64,18 @@ public class MemberSessionHandler {
 		members.get(roomKey).add(member);
 		JsonObject addMessage = createAddMessage(member);
 		sendToAllConnectedSessions(addMessage, roomKey);
-//		if(!member.getObserver()){
-//			startNewGame();
-//		}
 	}
 
+	public void closeSession(Session session) {
+		if(session.isOpen()){
+			try {
+				session.close();
+			} catch (IOException ex) {
+				Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+	
 	private Member getMemberById(int id, String roomKey) {
 		if(members.containsKey(roomKey)){
 			for (Member member : members.get(roomKey)) {
@@ -89,47 +103,55 @@ public class MemberSessionHandler {
 	public void removeMemberByClientKey(int clientKey, String roomKey) {
 		for (Member member : members.get(roomKey)) {
 			if(member.getClientKey().equals(clientKey)){
-				removeMember(member.getId(), roomKey);
+				removeMember(member, roomKey);
 			}
 		}		
 	}
 	
-	public void removeMember(int id, String roomKey) {
-		Member member = getMemberById(id, roomKey);
+	public void removeMemberById(int memberId, String roomKey) {
+		Member member = getMemberById(memberId, roomKey);
+		removeMember(member, roomKey);
+	}
+	
+	public void removeMember(Member member, String roomKey) {
 		if (member != null) {
-			members.get(roomKey).remove(member);
+			if(members.get(roomKey).contains(member)){
+				Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.INFO, "removeMember");
+				members.get(roomKey).remove(member);
+			}
 			JsonProvider provider = JsonProvider.provider();
 			JsonObject removeMessage = provider.createObjectBuilder()
 					.add("action", "remove")
-					.add("id", id)
+					.add("id", member.getId())
+					.add("clientKey", member.getClientKey())
 					.build();
 			sendToAllConnectedSessions(removeMessage, roomKey);
 		}
 	}
-
-    public void removeSession(Session session, String roomKey) {
-		if(sessions.containsKey(roomKey)){
-			sessions.get(roomKey).remove(session);
-		}
-    }
 	
 	private void sendToAllConnectedSessions(JsonObject message, String roomKey) {
 		if(sessions.containsKey(roomKey)){
-			for (Session session : sessions.get(roomKey)) {
-				sendToSession(session, message, roomKey);
+			Iterator it = sessions.get(roomKey).iterator();
+			while (it.hasNext()) {
+				Session session = (Session)it.next();
+				if(!session.isOpen() || !sendToSession(session, message, roomKey)){
+					it.remove();
+				}
 			}
 		}
 	}
 
-	private void sendToSession(Session session, JsonObject message, String roomKey) {
+	private boolean sendToSession(Session session, JsonObject message, String roomKey) {
+		boolean success = false;
 		try {
 			session.getBasicRemote().sendText(message.toString());
-		} catch (IOException ex) {
-			if(sessions.containsKey(roomKey)){
-				sessions.get(roomKey).remove(session);
-			}
-			Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.INFO, "sendToSession: {0}", message.toString());
+			success = true;
+		} catch (IOException | IllegalStateException ex) {
+			//Logger.getLogger(MemberSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
+			success = false;
 		}
+		return success;
 	}
 
 	public void startNewGame(String roomKey) {

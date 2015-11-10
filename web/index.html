@@ -48,16 +48,17 @@
 						</div>
 						<div id="memberContainer" style="display:none;"></div>
 						<div id="pointPickerContainer" style="display:none;">
-							<div class="card" onclick="PointingPoker.selectVote(this, '?')">?</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '0')">0</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '1')">1</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '2')">2</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '3')">3</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '5')">5</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '8')">8</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '13')">13</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '20')">20</div>
-							<div class="card" onclick="PointingPoker.selectVote(this, '40')">40</div>
+							<div class="card" id="pokerCard-question" onclick="PointingPoker.selectVote(this, 'question')">?</div>
+							<div class="card" id="pokerCard-0" onclick="PointingPoker.selectVote(this, '0')">0</div>
+							<div class="card" id="pokerCard-half" onclick="PointingPoker.selectVote(this, 'half')"><sup>1</sup>&frasl;<sub>2</sub></div>
+							<div class="card" id="pokerCard-1" onclick="PointingPoker.selectVote(this, '1')">1</div>
+							<div class="card" id="pokerCard-2" onclick="PointingPoker.selectVote(this, '2')">2</div>
+							<div class="card" id="pokerCard-3" onclick="PointingPoker.selectVote(this, '3')">3</div>
+							<div class="card" id="pokerCard-5" onclick="PointingPoker.selectVote(this, '5')">5</div>
+							<div class="card" id="pokerCard-8" onclick="PointingPoker.selectVote(this, '8')">8</div>
+							<div class="card" id="pokerCard-13" onclick="PointingPoker.selectVote(this, '13')">13</div>
+							<div class="card" id="pokerCard-20" onclick="PointingPoker.selectVote(this, '20')">20</div>
+							<div class="card" id="pokerCard-40" onclick="PointingPoker.selectVote(this, '40')">40</div>
 						</div>
 						<div id="resultsContainer" style="display:none;"></div>
 						<div id="newGameContainer" style="display:none;">

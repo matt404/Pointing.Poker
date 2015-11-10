@@ -1,33 +1,41 @@
 
 var PointingPoker = function(){
 	
-	var _socket, _clientKey, _roomKey, _memberId;
+	var _socket, _clientKey, _memberId, _roomKey;
 	
 	var init = function (){
 		window.onload = load;
-		window.onunload = this.exitRoom;
+		window.onunload = unload;
 	};
 	
 	var load = function(){
-		var savedRoomKey = localStorage.getItem('pointingpoker:roomkey');
-		var username = localStorage.getItem('pointingpoker:username');
-		var qsRoomKey = getQSValue("room");
-		console.log(qsRoomKey)
-		if(typeof(savedRoomKey) === "string" && savedRoomKey !== ""){
-			if(typeof(qsRoomKey) === "string" && qsRoomKey !== ""){
-				savedRoomKey = qsRoomKey;
-			}
-			document.getElementById("inputRoomKey").value = savedRoomKey;
-			document.getElementById("inputName").focus();
-			if(typeof(username) === "string" && username !== ""){
-				document.getElementById("inputName").value = username;
-				document.getElementById("inputName").select();		
-			}
-		}else{
-			document.getElementById("inputRoomKey").focus();			
+		setLoginFormDefaults();
+	};
+
+	var addMember = function (name, observer) {
+		var MemberAction = {
+			action: "add",
+			name: name,
+			observer: observer,
+			vote: "",
+			clientKey: _clientKey,
+			roomKey: _roomKey
+		};
+		_socket.send(JSON.stringify(MemberAction));
+	};
+
+	var closeWebSocket = function (){
+		if(_socket.readyState === 1){
+			_socket.close();
 		}
 	};
 
+	var disposeGame = function(){
+		document.getElementById("memberContainer").innerHTML = "";
+		document.getElementById("resultsContainer").innerHTML = "";
+		resetGameState();	
+	};
+	
 	var getWebSocketPath = function (){
 		var loc = window.location, newUri;
 		if (loc.protocol === "https:") {
@@ -57,62 +65,36 @@ var PointingPoker = function(){
 	};
 
 	var onMessage = function (event) {
-		console.log(event);
+//		console.log(event);
 		var member = JSON.parse(event.data);
-		if (member.action === "add") {
-			printMemberElement(member);
-			if(sessionStorage.getItem('pointingpoker:clientkey')*1 === member.clientKey){
-				sessionStorage.setItem('pointingpoker:serverid', member.id);
-				PointingPoker.hideForm(member.observer);
-			}
-		}
-		if (member.action === "remove") {
-			if(parseInt(sessionStorage.getItem('pointingpoker:serverid'),10) === parseInt(member.id,10)){
-				sessionStorage.removeItem('pointingpoker:clientkey');
-				sessionStorage.removeItem('pointingpoker:serverid');
-				document.location.reload();
-			}else{
-				document.getElementById("memberSpan"+member.id).remove();
-				document.getElementById("memberCardDiv"+member.id).remove();
-			}
-		}
-		if (member.action === "vote") {
-			var memberCardDiv = document.getElementById("memberCardDiv"+member.id);
-			memberCardDiv.setAttribute('votevalue',member.vote);
-			var memberSpan = document.getElementById("memberSpan"+member.id);
-			memberSpan.setAttribute("class", "member-tag label label-primary ticked");
-		}
-		if (member.action === "showcards") {
-			var resultsContainer = document.getElementById('resultsContainer');
-			var memberContainer = document.getElementById('memberContainer');
-			var pointPickerContainer = document.getElementById('pointPickerContainer');
-			var iCount = resultsContainer.childNodes.length;
-			for(var i=0; i < iCount; i++){
-				var result = resultsContainer.childNodes[i];
-				result.innerHTML = result.getAttribute("votevalue");
-				result.setAttribute("class", "card-result showValue");
-			}		
-		}
-		if (member.action === "newgame") {
-			var resultsContainer = document.getElementById('resultsContainer');
-			var memberContainer = document.getElementById('memberContainer');
-			var pointPickerContainer = document.getElementById('pointPickerContainer');
-			var iCount = resultsContainer.childNodes.length;
-			for(var i=0; i < iCount; i++){
-				resultsContainer.childNodes[i].innerHTML = "?";
-				resultsContainer.childNodes[i].setAttribute("class", "card-result hideValue");
-			}
-			iCount = pointPickerContainer.childNodes.length;
-			for(var i=0; i < iCount; i++){
-				pointPickerContainer.childNodes[i].className = "card";
-			}
-			iCount = memberContainer.childNodes.length;
-			for(var i=0; i < iCount; i++){
-				if(memberContainer.childNodes[i].getAttribute("isobserver") !== "true"){
-					memberContainer.childNodes[i].setAttribute("class", "member-tag label label-primary");
+		
+		switch(member.action){
+			case 'vote':
+				setMemberVote(member);
+				break;
+				
+			case 'add':
+				printMemberElement(member);
+
+				if(_clientKey === parseInt(member.clientKey,10)){
+					_memberId = parseInt(member.id,10);
+					PointingPoker.hideForm(member.observer);
 				}
-			}
+				break;
+				
+			case 'remove':
+				removeMember(member);
+				break;
+				
+			case 'showcards':
+				showCards();
+				break;
+				
+			case 'newgame':
+				resetGameState();
+				break;
 		}
+
 	};
 
 	var printMemberElement = function (member) {
@@ -129,50 +111,103 @@ var PointingPoker = function(){
 			memberCardDiv.id = "memberCardDiv"+member.id;
 			memberCardDiv.setAttribute("class", "card-result hideValue");
 			memberCardDiv.innerHTML = "?";
-			if(member.vote !== ""){
-				memberCardDiv.setAttribute("votevalue", member.vote);
-			}
 			resultsContainer.appendChild(memberCardDiv);
-
 		}
 		memberSpan.setAttribute("isobserver", member.observer);
 		memberSpan.id = "memberSpan"+member.id;
 		memberSpan.innerHTML = member.name;
 		memberContainer.appendChild(memberSpan);
+		if(member.vote !== ""){
+			setMemberVote(member);
+		}
+		
 	};
 
-	var addMember = function (name, observer) {
-		var MemberAction = {
-			action: "add",
-			name: name,
-			observer: observer,
-			vote: "",
-			clientKey: _clientKey,
-			roomKey: _roomKey
-		};
-		_socket.send(JSON.stringify(MemberAction));
-	};
-
-	var removeMember = function (element) {
-		var id = element;
-		var MemberAction = {
-			action: "remove",
-			id: id,
-			clientKey: _clientKey,
-			roomKey: _roomKey
-		};
-		_socket.send(JSON.stringify(MemberAction));
+	var removeMember = function (member) {
+		if(_memberId === parseInt(member.id,10)){
+			PointingPoker.exitRoom();
+		}else{
+			var memberSpan = document.getElementById("memberSpan"+member.id);
+			var memberCardDiv = document.getElementById("memberCardDiv"+member.id);
+			if(memberSpan){
+				memberSpan.remove();
+			}
+			if(memberCardDiv){
+				memberCardDiv.remove();
+			}
+		}
 	};
 	
+	var resetGameState = function(){
+		var resultsContainer = document.getElementById('resultsContainer');
+		var memberContainer = document.getElementById('memberContainer');
+		var pointPickerContainer = document.getElementById('pointPickerContainer');
+		var iCount = resultsContainer.childNodes.length;
+		for(var i=0; i < iCount; i++){
+			resultsContainer.childNodes[i].innerHTML = "?";
+			resultsContainer.childNodes[i].setAttribute("class", "card-result hideValue");
+		}
+		iCount = pointPickerContainer.childNodes.length;
+		for(var i=0; i < iCount; i++){
+			pointPickerContainer.childNodes[i].className = "card";
+		}
+		iCount = memberContainer.childNodes.length;
+		for(var i=0; i < iCount; i++){
+			if(memberContainer.childNodes[i].getAttribute("isobserver") !== "true"){
+				memberContainer.childNodes[i].setAttribute("class", "member-tag label label-primary");
+			}
+		}		
+	};
+	
+	var setMemberVote = function(member){
+		var memberCardDiv = document.getElementById("memberCardDiv"+member.id);
+		memberCardDiv.setAttribute('votevalue',member.vote);
+		var memberSpan = document.getElementById("memberSpan"+member.id);
+		memberSpan.setAttribute("class", "member-tag label label-primary ticked");
+	};
+	
+	var setLoginFormDefaults = function(){
+		var savedRoomKey = localStorage.getItem('pointingpoker:roomkey');
+		var username = localStorage.getItem('pointingpoker:username');
+		var qsRoomKey = getQSValue("room");
+		if(typeof(savedRoomKey) === "string" && savedRoomKey !== ""){
+			if(typeof(qsRoomKey) === "string" && qsRoomKey !== ""){
+				savedRoomKey = qsRoomKey;
+			}
+			document.getElementById("inputRoomKey").value = savedRoomKey;
+			document.getElementById("inputName").focus();
+			if(typeof(username) === "string" && username !== ""){
+				document.getElementById("inputName").value = username;
+				document.getElementById("inputName").select();		
+			}
+		}else{
+			document.getElementById("inputRoomKey").focus();			
+		}
+	};
+	
+	var showCards = function(){
+		var resultsContainer = document.getElementById('resultsContainer');
+		var iCount = resultsContainer.childNodes.length;
+		for(var i=0; i < iCount; i++){
+			var result = resultsContainer.childNodes[i];
+			var voteDisplayHtml = document.getElementById('pokerCard-'+result.getAttribute("votevalue")).innerHTML;
+			result.innerHTML = voteDisplayHtml;
+			result.setAttribute("class", "card-result showValue");
+		}		
+	};
+	
+	var unload = function (){
+		closeWebSocket();
+	};
+
 	init();
 	
 	return {
 
 		exitRoom : function (){
-			var serverId = sessionStorage.getItem('pointingpoker:serverid')*1;
-			if(serverId >= 0){
-				removeMember(serverId);
-			}
+			disposeGame();
+			closeWebSocket();
+			this.showForm();
 		},
 		
 		selectVote : function (element, vote) {
@@ -183,11 +218,10 @@ var PointingPoker = function(){
 				pointPickerContainer.childNodes[i].className = "card";
 			}
 			element.className = "card selected";
-			var serverId = sessionStorage.getItem('pointingpoker:serverid')*1;
 			var MemberAction = {
 				action: "vote",
 				vote: vote,
-				id: serverId,
+				id: _memberId,
 				clientKey: _clientKey,
 				roomKey: _roomKey
 			};
@@ -234,7 +268,6 @@ var PointingPoker = function(){
 				_socket.onmessage = onMessage;
 				_socket.onopen = function(){
 					localStorage.setItem('pointingpoker:roomkey', _roomKey);
-					sessionStorage.setItem('pointingpoker:clientkey', _clientKey);
 					localStorage.setItem('pointingpoker:username', name);
 					addMember(name, observer);
 				};

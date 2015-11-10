@@ -36,8 +36,8 @@ public class MemberWebSocketServer {
 
 	@OnClose
 	public void close(Session session) {
-		sessionHandler.removeSession(session, this.roomKey);
-		sessionHandler.removeMemberByClientKey(clientKey, roomKey);
+		sessionHandler.closeSession(session);
+		sessionHandler.removeMemberByClientKey(this.clientKey, this.roomKey);
 	}
 
 	@OnError
@@ -61,7 +61,7 @@ public class MemberWebSocketServer {
 
             if ("remove".equals(jsonMessage.getString("action"))) {
                 int id = (int) jsonMessage.getInt("id");
-                sessionHandler.removeMember(id, this.roomKey);
+                sessionHandler.removeMemberById(id, this.roomKey);
             }
 
             if ("vote".equals(jsonMessage.getString("action"))) {
