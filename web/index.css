@@ -6,6 +6,10 @@ div#newGameContainer{
 	margin-top:20px;
 }
 
+ul#navTabs{
+    margin-bottom: 20px;
+}
+
 div#resultsContainer div.card-result {
 	border: solid 4px #ffffff;
 	border-radius: 10px;
