@@ -236,7 +236,8 @@ var PointingPoker = function () {
         showForm: function () {
             document.getElementById("newGameContainer").style.display = "none";
             document.getElementById("linkExit").style.display = "none";
-            document.getElementById("navTabs").style.display = 'none';
+            document.getElementById("linkStoryPointing").style.display = "none";
+            document.getElementById("linkVelocityPointing").style.display = "none";
             //document.getElementById("pointPickerContainer").style.display = "none";
             //document.getElementById("resultsContainer").style.display = "none";
             document.getElementById("memberContainer").style.display = "none";
@@ -248,8 +249,9 @@ var PointingPoker = function () {
                 document.getElementById("newGameContainer").style.display = "block";
                 //document.getElementById("pointPickerContainer").style.display = "block";
             }
-            document.getElementById("linkExit").style.display = "block";
-            document.getElementById("navTabs").style.display = 'block';
+            document.getElementById("linkExit").style.display = "";
+            document.getElementById("linkStoryPointing").style.display = "";
+            document.getElementById("linkVelocityPointing").style.display = "";
             document.getElementById("resultsContainer").style.display = "block";
             document.getElementById("memberContainer").style.display = "block";
             document.getElementById("roomEntryContainer").style.display = "none";
@@ -275,14 +277,14 @@ var PointingPoker = function () {
         setGameType: function (gameType) {
             switch(gameType){
                 case "task": 
-                    document.getElementById("gameType-task").className = "active";
-                    document.getElementById("gameType-velocity").className = "";
+                    document.getElementById("linkStoryPointing").className = "active";
+                    document.getElementById("linkVelocityPointing").className = "";
                     document.getElementById("gameContainer-task").style.display = "block";
                     document.getElementById("gameContainer-velocity").style.display = "none";
                     break;
                 case "velocity":
-                    document.getElementById("gameType-task").className = "";
-                    document.getElementById("gameType-velocity").className = "active";
+                    document.getElementById("linkStoryPointing").className = "";
+                    document.getElementById("linkVelocityPointing").className = "active";
                     document.getElementById("gameContainer-task").style.display = "none";
                     document.getElementById("gameContainer-velocity").style.display = "block";
                     break;

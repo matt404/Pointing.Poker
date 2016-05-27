@@ -3,94 +3,102 @@
  */
 
 div#newGameContainer{
-	margin-top:20px;
+  margin-top:20px;
+}
+
+.marginBottom20{
+  margin-bottom: 20px;
 }
 
 ul#navTabs{
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 div#resultsContainer div.card-result {
-	border: solid 4px #ffffff;
-	border-radius: 10px;
-	font-size: 30px;
-	height: 100px;
-	line-height: 100px;
-	vertical-align: middle;
-	width: 65px;
-	display:inline-block;
-	margin-top: 20px;
-	margin-right: 15px;
-	cursor:pointer;
+  border: solid 4px #ffffff;
+  border-radius: 10px;
+  font-size: 30px;
+  height: 100px;
+  line-height: 100px;
+  vertical-align: middle;
+  width: 65px;
+  display:inline-block;
+  margin-top: 20px;
+  margin-right: 15px;
+  cursor:pointer;
 }
 
 div#resultsContainer div.hideValue{
-	background: rgb(160,160,160); /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%, rgba(114,114,114,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(160,160,160,1)), color-stop(100%,rgba(114,114,114,1))); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* IE10+ */
-	background: radial-gradient(ellipse at center,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0a0a0', endColorstr='#727272',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  background: rgb(160,160,160); /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%, rgba(114,114,114,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(160,160,160,1)), color-stop(100%,rgba(114,114,114,1))); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center,  rgba(160,160,160,1) 0%,rgba(114,114,114,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0a0a0', endColorstr='#727272',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 div#resultsContainer div.showValue{
-	background: rgb(209,131,131); /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%, rgba(212,106,106,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(209,131,131,1)), color-stop(100%,rgba(212,106,106,1))); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* IE10+ */
-	background: radial-gradient(ellipse at center,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d18383', endColorstr='#d46a6a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  background: rgb(209,131,131); /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%, rgba(212,106,106,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(209,131,131,1)), color-stop(100%,rgba(212,106,106,1))); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center,  rgba(209,131,131,1) 0%,rgba(212,106,106,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d18383', endColorstr='#d46a6a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 div#pointPickerContainer div.card{
-	border: solid 2px #ffffff;
-	border-radius: 10px;
-	background-color: #c0c0c0;
-	font-size: 18px;
-	height: 40px;
-	line-height: 40px;
-	vertical-align: middle;
-	width: 30px;
-	display:inline-block;
-	margin-top: 20px;
-	cursor:pointer;
+  border: solid 2px #ffffff;
+  border-radius: 10px;
+  background-color: #c0c0c0;
+  font-size: 18px;
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+  width: 30px;
+  display:inline-block;
+  margin-top: 20px;
+  cursor:pointer;
 }
 
 div#pointPickerContainer div.selected{
-	background-color: #68b159;
+  background-color: #68b159;
 }
 
 div#memberContainer span.ticked{
-	background-image: url("images/tick.png");
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    background-position: 98% 50%; 
-	padding-right: 22px;
+  background-image: url("images/tick.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 98% 50%; 
+  padding-right: 22px;
 }
 
 span.member-tag {
-	margin-right:4px;
+  margin-right:4px;
+}
+
+div#velocityEntryContainer{
+  text-align: center;
 }
 
 /* Links */
 a,
 a:focus,
 a:hover {
-	color: #fff;
+  color: #fff;
 }
 
 /* Custom default button */
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
-	color: #333;
-	text-shadow: none; /* Prevent inheritence from `body` */
-	background-color: #fff;
-	border: 1px solid #fff;
+  color: #333;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid #fff;
 }
 
 
@@ -100,36 +108,36 @@ a:hover {
 
 html,
 body {
-	height: 100%;
-	background-color: #333;
+  height: 100%;
+  background-color: #333;
 }
 body {
-	color: #fff;
-	text-align: center;
-	text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
-	display: table;
-	width: 100%;
-	height: 100%; /* For at least Firefox */
-	min-height: 100%;
-	-webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-	box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+  display: table;
+  width: 100%;
+  height: 100%; /* For at least Firefox */
+  min-height: 100%;
+  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+  box-shadow: inset 0 0 100px rgba(0,0,0,.5);
 }
 .site-wrapper-inner {
-	display: table-cell;
-	vertical-align: top;
+  display: table-cell;
+  vertical-align: top;
 }
 .cover-container {
-	margin-right: auto;
-	margin-left: auto;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* Padding for spacing */
 .inner {
-	padding: 30px;
+  padding: 30px;
 }
 
 
@@ -137,45 +145,45 @@ body {
  * Header
  */
 .masthead-brand {
-	margin-top: 10px;
-	margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .masthead-nav > li {
-	display: inline-block;
+  display: inline-block;
 }
 .masthead-nav > li + li {
-	margin-left: 20px;
+  margin-left: 20px;
 }
 .masthead-nav > li > a {
-	padding-right: 0;
-	padding-left: 0;
-	font-size: 16px;
-	font-weight: bold;
-	color: #fff; /* IE8 proofing */
-	color: rgba(255,255,255,.75);
-	border-bottom: 2px solid transparent;
+  padding-right: 0;
+  padding-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff; /* IE8 proofing */
+  color: rgba(255,255,255,.75);
+  border-bottom: 2px solid transparent;
 }
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
-	background-color: transparent;
-	border-bottom-color: #a9a9a9;
-	border-bottom-color: rgba(255,255,255,.25);
+  background-color: transparent;
+  border-bottom-color: #a9a9a9;
+  border-bottom-color: rgba(255,255,255,.25);
 }
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-	color: #fff;
-	border-bottom-color: #fff;
+  color: #fff;
+  border-bottom-color: #fff;
 }
 
 @media (min-width: 768px) {
-	.masthead-brand {
-		float: left;
-	}
-	.masthead-nav {
-		float: right;
-	}
+  .masthead-brand {
+    float: left;
+  }
+  .masthead-nav {
+    float: right;
+  }
 }
 
 
@@ -184,11 +192,11 @@ body {
  */
 
 .cover {
-	padding: 0 20px;
+  padding: 0 20px;
 }
 .cover .btn-lg {
-	padding: 10px 20px;
-	font-weight: bold;
+  padding: 10px 20px;
+  font-weight: bold;
 }
 
 
@@ -197,8 +205,8 @@ body {
  */
 
 .mastfoot {
-	color: #999; /* IE8 proofing */
-	color: rgba(255,255,255,.5);
+  color: #999; /* IE8 proofing */
+  color: rgba(255,255,255,.5);
 }
 
 
@@ -207,31 +215,31 @@ body {
  */
 
 @media (min-width: 768px) {
-	/* Pull out the header and footer */
-	.masthead {
-		position: fixed;
-		top: 0;
-	}
-	.mastfoot {
-		position: fixed;
-		bottom: 0;
-	}
-	/* Start the vertical centering */
-	.site-wrapper-inner {
-		vertical-align: middle;
-	}
-	/* Handle the widths */
-	.masthead,
-	.mastfoot,
-	.cover-container {
-		width: 100%; /* Must be percentage or pixels for horizontal alignment */
-	}
+  /* Pull out the header and footer */
+  .masthead {
+    position: fixed;
+    top: 0;
+  }
+  .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
+  /* Start the vertical centering */
+  .site-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
 }
 
 @media (min-width: 992px) {
-	.masthead,
-	.mastfoot,
-	.cover-container {
-		width: 700px;
-	}
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 700px;
+  }
 }
