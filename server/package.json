@@ -1,0 +1,12 @@
+{
+  "name": "pointing.poker",
+  "version": "0.0.0",
+  "description": "A tool for agile teams to point stories with.",
+  "main": "index.js",
+  "author": "Matt Wilson",
+  "private": true,
+  "license": "BSD",
+  "dependencies": {
+    "express": "4.13.4"
+  }
+}
