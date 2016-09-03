@@ -3,6 +3,8 @@ var PointingPoker = function () {
 
     var _socket, _clientKey, _memberId, _roomKey;
 
+    var socket = io();
+
     var init = function () {
         window.onload = load;
         window.onunload = unload;
@@ -258,9 +260,10 @@ var PointingPoker = function () {
             document.getElementById("gameContainer-task").style.display = "block";
         },
         formSubmit: function () {
+            socket.emit('add', {"fart":"ballz"});
             var name = document.getElementById("inputName").value;
             _roomKey = document.getElementById("inputRoomKey").value;
-            var observer = eval(document.getElementById("selectObserver").value);
+            var observer = JSON.parse(document.getElementById("selectObserver").value);
             if (name !== "" && _roomKey !== "") {
                 _clientKey = parseInt(Math.random() * 1000000, 10);
                 var wsPath = getWebSocketPath();
@@ -273,10 +276,10 @@ var PointingPoker = function () {
                 };
             }
         },
-        
+
         setGameType: function (gameType) {
             switch(gameType){
-                case "task": 
+                case "task":
                     document.getElementById("linkStoryPointing").className = "active";
                     document.getElementById("linkVelocityPointing").className = "";
                     document.getElementById("gameContainer-task").style.display = "block";
@@ -290,9 +293,9 @@ var PointingPoker = function () {
                     break;
             }
         },
-        
+
         submitVelocityVote: function(vote){
-            
+
         }
     };
 }();

@@ -10,7 +10,7 @@ server.listen(port, function () {
 });
 
 // Routing
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/client'));
 
 // Chatroom
 
@@ -18,6 +18,18 @@ var numUsers = 0;
 
 io.on('connection', function (socket) {
   var addedUser = false;
+
+  // when the client emits 'new message', this listens and executes
+  socket.on('add', function (data) {
+    // we tell the client to execute 'new message'
+    console.log('add',data);
+    /*
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+    */
+  });
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
