@@ -4,6 +4,16 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
+var members = {};
+var Member = {
+    id: 0,
+    name: "",
+    observer: "",
+    vote: "",
+    clientKey: 0,
+    roomKey: ""
+};
+
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -20,9 +30,53 @@ io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
+  socket.on('vote', function (data) {
+    // we tell the client to execute 'new message'
+    console.log('vote',data);
+    /*
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+    */
+  });
+
   socket.on('add', function (data) {
     // we tell the client to execute 'new message'
     console.log('add',data);
+    /*
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+    */
+  });
+
+  socket.on('showcards', function (data) {
+    // we tell the client to execute 'new message'
+    console.log('showcards',data);
+    /*
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+    */
+  });
+
+  socket.on('remove', function (data) {
+    // we tell the client to execute 'new message'
+    console.log('remove',data);
+    /*
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+    */
+  });
+
+  socket.on('newgame', function (data) {
+    // we tell the client to execute 'new message'
+    console.log('newgame',data);
     /*
     socket.broadcast.emit('new message', {
       username: socket.username,

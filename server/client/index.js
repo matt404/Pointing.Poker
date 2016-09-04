@@ -15,15 +15,16 @@ var PointingPoker = function () {
     };
 
     var addMember = function (name, observer) {
-        var MemberAction = {
-            action: "add",
+
+        var member = {
             name: name,
             observer: observer,
             vote: "",
             clientKey: _clientKey,
             roomKey: _roomKey
         };
-        _socket.send(JSON.stringify(MemberAction));
+        socket.emit('add', member);
+
     };
 
     var closeWebSocket = function () {
@@ -36,18 +37,6 @@ var PointingPoker = function () {
         document.getElementById("memberContainer").innerHTML = "";
         document.getElementById("resultsContainer").innerHTML = "";
         resetGameState();
-    };
-
-    var getWebSocketPath = function () {
-        var loc = window.location, newUri;
-        if (loc.protocol === "https:") {
-            newUri = "wss:";
-        } else {
-            newUri = "ws:";
-        }
-        newUri += "//" + loc.host;
-        newUri += loc.pathname + "member/actions";
-        return newUri;
     };
 
     var getQSValue = function (key) {
@@ -260,20 +249,15 @@ var PointingPoker = function () {
             document.getElementById("gameContainer-task").style.display = "block";
         },
         formSubmit: function () {
-            socket.emit('add', {"fart":"ballz"});
+
             var name = document.getElementById("inputName").value;
             _roomKey = document.getElementById("inputRoomKey").value;
             var observer = JSON.parse(document.getElementById("selectObserver").value);
             if (name !== "" && _roomKey !== "") {
                 _clientKey = parseInt(Math.random() * 1000000, 10);
-                var wsPath = getWebSocketPath();
-                _socket = new WebSocket(wsPath + "/" + _clientKey + "/" + window.escape(_roomKey));
-                _socket.onmessage = onMessage;
-                _socket.onopen = function () {
-                    localStorage.setItem('pointingpoker:roomkey', _roomKey);
-                    localStorage.setItem('pointingpoker:username', name);
-                    addMember(name, observer);
-                };
+                localStorage.setItem('pointingpoker:roomkey', _roomKey);
+                localStorage.setItem('pointingpoker:username', name);
+                addMember(name, observer);
             }
         },
 
