@@ -12,9 +12,16 @@ var PointingPoker = function () {
 
     var load = function () {
         setLoginFormDefaults();
+        socket.on('vote', setMemberVote);
+        socket.on('add', addMember);
+        socket.on('remove', removeMember);
+        socket.on('showcards', showCards);
+        socket.on('newgame', resetGameState);
     };
 
-    var addMember = function (name, observer) {
+    var addMemberEmit = function (name, observer) {
+
+      console.log("addMemberEmit", name, observer);
 
         var member = {
             name: name,
@@ -23,14 +30,28 @@ var PointingPoker = function () {
             clientKey: _clientKey,
             roomKey: _roomKey
         };
+
         socket.emit('add', member);
 
     };
 
+    var addMember = function (member) {
+
+      console.log("addMember", member);
+
+      printMemberElement(member);
+
+      if (_clientKey === parseInt(member.clientKey, 10)) {
+          _memberId = parseInt(member.id, 10);
+          PointingPoker.hideForm(member.observer);
+      }
+
+    };
+
     var closeWebSocket = function () {
-        if (_socket.readyState === 1) {
-            _socket.close();
-        }
+        //if (_socket.readyState === 1) {
+        //    _socket.close();
+        //}
     };
 
     var disposeGame = function () {
@@ -53,39 +74,6 @@ var PointingPoker = function () {
             }
         }
         return val;
-    };
-
-    var onMessage = function (event) {
-//		console.log(event);
-        var member = JSON.parse(event.data);
-
-        switch (member.action) {
-            case 'vote':
-                setMemberVote(member);
-                break;
-
-            case 'add':
-                printMemberElement(member);
-
-                if (_clientKey === parseInt(member.clientKey, 10)) {
-                    _memberId = parseInt(member.id, 10);
-                    PointingPoker.hideForm(member.observer);
-                }
-                break;
-
-            case 'remove':
-                removeMember(member);
-                break;
-
-            case 'showcards':
-                showCards();
-                break;
-
-            case 'newgame':
-                resetGameState();
-                break;
-        }
-
     };
 
     var printMemberElement = function (member) {
@@ -207,22 +195,22 @@ var PointingPoker = function () {
                 pointPickerContainer.childNodes[i].className = "card";
             }
             element.className = "card selected";
-            var MemberAction = {
+            var member = {
                 action: "vote",
                 vote: vote,
                 id: _memberId,
                 clientKey: _clientKey,
                 roomKey: _roomKey
             };
-            _socket.send(JSON.stringify(MemberAction));
+            socket.emit('vote', member);
         },
         newGame: function () {
-            var MemberAction = {
+            var member = {
                 action: "newgame",
                 clientKey: _clientKey,
                 roomKey: _roomKey
             };
-            _socket.send(JSON.stringify(MemberAction));
+            socket.emit('newgame', member);
         },
         showForm: function () {
             document.getElementById("newGameContainer").style.display = "none";
@@ -257,7 +245,7 @@ var PointingPoker = function () {
                 _clientKey = parseInt(Math.random() * 1000000, 10);
                 localStorage.setItem('pointingpoker:roomkey', _roomKey);
                 localStorage.setItem('pointingpoker:username', name);
-                addMember(name, observer);
+                addMemberEmit(name, observer);
             }
         },
 

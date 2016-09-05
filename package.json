@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Matt Wilson",
   "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
   "license": "BSD",
   "dependencies": {
     "express": "4.13.4",
