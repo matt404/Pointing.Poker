@@ -27,7 +27,7 @@ To build the docker container:
 `docker build -t matt404:pointingpoker .`
 
 To run the application in a local docker container:
-`docker run -p 3000:3000 matt404:pointingpoker`
+`docker run -d -p 3000:3000 matt404:pointingpoker`
 
 Check the container status
 `docker ps`
