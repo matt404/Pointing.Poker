@@ -13,6 +13,7 @@ RUN apt-get -y install npm
 RUN npm cache clean -f
 RUN npm install -g n
 RUN n stable
+RUN service redis-service start
 
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:

@@ -34,3 +34,6 @@ Check the container status
 
 To stop the container: (use the command above to get the container id)
 `docker stop <container id>`
+
+Attach to a container with new terminal session:
+`docker exec -i -t 243c463e6d6f /bin/bash`
