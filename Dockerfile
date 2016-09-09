@@ -7,13 +7,10 @@ MAINTAINER Matt Wilson <mwilson@mswis.com>
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 RUN apt-get update
-RUN apt-get -y install curl
-RUN apt-get -y install redis-server
-RUN apt-get -y install npm
+RUN apt-get -y install curl npm
 RUN npm cache clean -f
 RUN npm install -g n
 RUN n stable
-RUN service redis-service start
 
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
@@ -27,6 +24,5 @@ WORKDIR /opt/app
 ADD . /opt/app
 
 EXPOSE 3000
-EXPOSE 6379
 
 CMD ["node", "app.js"]
