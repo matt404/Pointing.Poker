@@ -31,26 +31,28 @@ io.on('connection', function (socket) {
 
     var member = new Member(data);
     var roomKey = member.roomKey.toLowerCase();
-    console.log('add',member);
+    var roomCacheKey = "ppoker_room_"+roomKey;
+    //console.log('add',member);
 
-    redisClient.get("ppoker_members123", function (err, members) {
+    redisClient.get(roomCacheKey, function (err, val) {
 
-        console.log("ppoker_members123", members);
+        var members = [];
 
-        if(members !== null && typeof(members) === "object"){
-          members[members.length] = member;
-        }else{
-          members = [ member ];
+        //console.log(roomCacheKey, err, val);
+
+        if(val !== null && typeof(val) === "string" && val !== ""){
+          members = JSON.parse(val);
         }
+        members[members.length] = member;
 
-        redisClient.set("ppoker_members123", members);
+        redisClient.set(roomCacheKey, JSON.stringify(members));
+
+        socket.join(roomKey);
+
+        socket.emit('add', member);
+        socket.broadcast.emit('add', member);
 
     });
-
-    socket.join(roomKey);
-
-    socket.emit('add', member);
-    socket.broadcast.emit('add', member);
 
   });
 
