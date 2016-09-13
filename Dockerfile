@@ -1,12 +1,13 @@
 FROM ubuntu:16.04
 
-MAINTAINER Matt Wilson <mwilson@mswis.com>
+MAINTAINER matt404 <docker@mswis.com>
 
-# install our dependencies and nodejs
-# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+# update the OS
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 RUN apt-get update
+
+# install dependencies
 RUN apt-get -y install curl npm
 RUN npm cache clean -f
 RUN npm install -g n
@@ -18,8 +19,7 @@ ADD package.json /tmp/package.json
 RUN cd /tmp && npm install
 RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
-# From here we load our application's code in, therefore the previous docker
-# "layer" thats been cached will be used if possible
+# Load application layer last to preserve caching
 WORKDIR /opt/app
 ADD . /opt/app
 

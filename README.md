@@ -9,6 +9,9 @@ group, thereby facilitating important discussion.
 
 First install the dependencies:
 
+* PointingPoker requires Redis, some options include:  1) You can
+install redis server on your local host or 2) run redis from a container.
+
 **Ubuntu Instructions**
 
 ```
@@ -26,11 +29,13 @@ To start the application:
 
 To build the docker container:
 
-`docker build -t matt404:pointingpoker .`
+`docker build -t matt404/pointingpoker .`
 
 To run the application in a local docker container:
 
-`docker run -d -p 3000:3000 matt404:pointingpoker`
+```
+docker run -d -p 3000:3000 matt404/pointingpoker
+```
 
 Check the container status
 
@@ -48,16 +53,14 @@ You can remove dangling Docker images by running:
 
 `docker rmi -f $(docker images -qf dangling=true)`
 
-To start the application:
-
+To download and start the application from a fresh Docker host:
 ```
-
 docker pull redis
+docker pull pull matt404/pointingpoker
 
 docker network create ppoker_default
 
 docker run -d --name ppoker_redis -v redis:/var/lib/redis/data --net ppoker_default -p 6379:6379 redis
 
 docker run -d -p 3000:3000 --net ppoker_default --link ppoker_redis:redis -e "REDIS_ADDR=ppoker_redis" -i -t matt404:pointingpoker
-
 ```
