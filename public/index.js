@@ -21,7 +21,7 @@ var PointingPoker = function () {
 
     var addMemberEmit = function (name, observer) {
 
-      console.log("addMemberEmit", name, observer);
+      //console.log("addMemberEmit", name, observer);
 
         var member = {
             name: name,
@@ -37,7 +37,7 @@ var PointingPoker = function () {
 
     var addMember = function (member) {
 
-      console.log("addMember", member);
+      //console.log("addMember", member);
 
       printMemberElement(member);
 
@@ -229,8 +229,8 @@ var PointingPoker = function () {
                 //document.getElementById("pointPickerContainer").style.display = "block";
             }
             document.getElementById("linkExit").style.display = "";
-            document.getElementById("linkStoryPointing").style.display = "";
-            document.getElementById("linkVelocityPointing").style.display = "";
+            //document.getElementById("linkStoryPointing").style.display = "";
+            //document.getElementById("linkVelocityPointing").style.display = "";
             document.getElementById("resultsContainer").style.display = "block";
             document.getElementById("memberContainer").style.display = "block";
             document.getElementById("roomEntryContainer").style.display = "none";
