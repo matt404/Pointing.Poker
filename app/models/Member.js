@@ -7,7 +7,8 @@ function Member(_req){
     observer: "",
     vote: "",
     clientKey: 0,
-    roomKey: ""
+    roomKey: "",
+    timestamp: new Date()
   };
 
   _member.id = parseInt(Math.random()*10000000,10);

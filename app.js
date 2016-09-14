@@ -1,27 +1,3 @@
-var cluster = require('cluster');
-
-cluster.on('exit', function (worker) {
-
-    // Replace the dead worker
-    console.log('Worker %d died : ', worker.id);
-    cluster.fork();
-
-});
-
-if (cluster.isMaster) {
-
-  var cpuCount = require('os').cpus().length;
-  if(cpuCount > 4){
-    cpuCount = 4;
-  }
-
-  // Create a worker for each CPU
-  for (var i = 0; i < cpuCount; i += 1) {
-    cluster.fork();
-  }
-
-// Code to run if we're in a worker process
-} else {
 
   // Setup basic express server
   var express = require('express');
@@ -37,7 +13,7 @@ if (cluster.isMaster) {
 
   var redisHost = process.env.REDIS_ADDR || '127.0.0.1';
   var redisPort = process.env.REDIS_PORT || 6379;
-  var roomCachePrefix = "ppoker_room_";
+  var roomCachePrefix = "ppoker1_room_";
 
   var redisClient = redis.createClient(redisPort, redisHost);
 
@@ -55,6 +31,8 @@ if (cluster.isMaster) {
 
       var member = new Member(data);
       var roomKey = member.roomKey.toLowerCase();
+      member.id = socket.id;
+      socket.roomKey = roomKey;
 
       redisClient.get(roomCachePrefix+roomKey, function (err, val) {
           var members = [];
@@ -145,8 +123,32 @@ if (cluster.isMaster) {
     });
 
     socket.on('disconnect', function (n1, n2, n3) {
-      console.log('disconnect', n1, n2, n3);
+
+      var roomKey = socket.roomKey;
+
+      io.to(roomKey).emit('remove', {id:socket.id});
+
+      redisClient.get(roomCachePrefix+roomKey, function (err, val) {
+
+          var members = [];
+
+          if(val !== null && typeof(val) === "string" && val !== ""){
+            members = JSON.parse(val);
+          }
+
+          var memberCount = members.length;
+          for(var i=memberCount-1; i >= 0; i--){
+            var mbr = members[i];
+            if(mbr.id === socket.id){
+              members.splice(i, i+1);
+              break;
+            }
+          }
+
+          redisClient.set(roomCachePrefix+roomKey, JSON.stringify(members));
+
+      });
+
     });
 
   });
-}

@@ -42,7 +42,7 @@ var PointingPoker = function () {
       printMemberElement(member);
 
       if (_clientKey === parseInt(member.clientKey, 10)) {
-          _memberId = parseInt(member.id, 10);
+          _memberId = member.id;
           PointingPoker.hideForm(member.observer);
       }
 
@@ -139,6 +139,7 @@ var PointingPoker = function () {
     };
 
     var setMemberVote = function (member) {
+      console.log(member);
         var memberCardDiv = document.getElementById("memberCardDiv" + member.id);
         memberCardDiv.setAttribute('votevalue', member.vote);
         var memberSpan = document.getElementById("memberSpan" + member.id);
@@ -242,7 +243,7 @@ var PointingPoker = function () {
             _roomKey = document.getElementById("inputRoomKey").value;
             var observer = JSON.parse(document.getElementById("selectObserver").value);
             if (name !== "" && _roomKey !== "") {
-                _clientKey = parseInt(Math.random() * 1000000, 10);
+                _clientKey = parseInt(Math.random() * 10000000, 10);
                 localStorage.setItem('pointingpoker:roomkey', _roomKey);
                 localStorage.setItem('pointingpoker:username', name);
                 addMemberEmit(name, observer);
