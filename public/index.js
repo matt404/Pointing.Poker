@@ -139,7 +139,6 @@ var PointingPoker = function () {
     };
 
     var setMemberVote = function (member) {
-      console.log(member);
         var memberCardDiv = document.getElementById("memberCardDiv" + member.id);
         memberCardDiv.setAttribute('votevalue', member.vote);
         var memberSpan = document.getElementById("memberSpan" + member.id);
@@ -149,6 +148,10 @@ var PointingPoker = function () {
     var setLoginFormDefaults = function () {
         var savedRoomKey = localStorage.getItem('pointingpoker:roomkey');
         var username = localStorage.getItem('pointingpoker:username');
+        var isObserver = localStorage.getItem('pointingpoker:observer');
+        if(typeof(isObserver) === "string" && isObserver !== ""){
+          document.getElementById("selectObserver").value = isObserver;
+        }
         var qsRoomKey = getQSValue("room");
         if (typeof (savedRoomKey) === "string" && savedRoomKey !== "") {
             if (typeof (qsRoomKey) === "string" && qsRoomKey !== "") {
@@ -241,12 +244,18 @@ var PointingPoker = function () {
 
             var name = document.getElementById("inputName").value;
             _roomKey = document.getElementById("inputRoomKey").value;
-            var observer = JSON.parse(document.getElementById("selectObserver").value);
+            var isObserver = document.getElementById("selectObserver").value;
+            if(typeof(isObserver) === "string" && isObserver !== ""){
+              isObserver = JSON.parse(isObserver);
+            }else{
+              isObserver = false;
+            }
             if (name !== "" && _roomKey !== "") {
                 _clientKey = parseInt(Math.random() * 10000000, 10);
                 localStorage.setItem('pointingpoker:roomkey', _roomKey);
                 localStorage.setItem('pointingpoker:username', name);
-                addMemberEmit(name, observer);
+                localStorage.setItem('pointingpoker:observer', isObserver);
+                addMemberEmit(name, isObserver);
             }
         },
 
