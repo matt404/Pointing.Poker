@@ -228,10 +228,8 @@ var PointingPoker = function () {
             document.getElementById("gameContainer-task").style.display = "block";
         },
         hideForm: function (observer) {
-            if (!observer) {
-                document.getElementById("newGameContainer").style.display = "block";
-                //document.getElementById("pointPickerContainer").style.display = "block";
-            }
+            document.getElementById("newGameContainer").style.display = observer ? "none" : "block";
+            document.getElementById("pointPickerContainer").style.display = observer ? "none" : "block";
             document.getElementById("linkExit").style.display = "";
             //document.getElementById("linkStoryPointing").style.display = "";
             //document.getElementById("linkVelocityPointing").style.display = "";

@@ -107,7 +107,7 @@
             var mbr = members[i];
             if(mbr.clientKey === memberVote.clientKey){
               members[i].vote = memberVote.vote;
-            } else if(typeof(mbr.vote) !== "string" || mbr.vote === ""){
+            } else if(!mbr.observer && (typeof(mbr.vote) !== "string" || mbr.vote === "")){
               gameOver = false;
             }
           }
