@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="description" content="A planning tool for all types of teams." />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
@@ -22,8 +22,13 @@
               <h3 class="masthead-brand">Pointing.Poker</h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li id="linkStoryPointing" class="active" style="display:none;"><a href="javascript:PointingPoker.setGameType('task');">Story Pointing</a></li>
-                  <li id="linkVelocityPointing" style="display:none;"><a href="javascript:PointingPoker.setGameType('velocity');">Velocity Pointing</a></li>
+                  <li class="dropdown">
+                    <a id="linkMenu" href="javascript:void(0);" class="dropdown-toggle" style="display:none;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li id="linkStoryPointing" class="active"><a href="javascript:PointingPoker.setGameType('task');">Story Pointing</a></li>
+                      <li id="linkVelocityPointing"><a href="javascript:PointingPoker.setGameType('velocity');">Velocity Pointing</a></li>
+                    </ul>
+                  </li>
                   <li id="linkExit" style="display:none;"><a href="javascript:PointingPoker.exitRoom();document.location.reload();">Exit</a></li>
                 </ul>
               </nav>
@@ -95,7 +100,7 @@
     <script src="socket.io/socket.io.js"></script>
     <script src="index.js"></script>
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
                   (function (i, s, o, g, r, a, m) {
                     i['GoogleAnalyticsObject'] = r;

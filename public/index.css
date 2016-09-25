@@ -72,7 +72,7 @@ div#memberContainer span.ticked{
   background-image: url("images/tick.png");
   background-repeat: no-repeat;
   background-attachment: scroll;
-  background-position: 98% 50%; 
+  background-position: 98% 50%;
   padding-right: 22px;
 }
 
@@ -89,6 +89,10 @@ a,
 a:focus,
 a:hover {
   color: #fff;
+}
+
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+  background-color: transparent;
 }
 
 /* Custom default button */

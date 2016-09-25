@@ -219,6 +219,7 @@ var PointingPoker = function () {
         showForm: function () {
             document.getElementById("newGameContainer").style.display = "none";
             document.getElementById("linkExit").style.display = "none";
+            document.getElementById("linkMenu").style.display = "none";
             document.getElementById("linkStoryPointing").style.display = "none";
             document.getElementById("linkVelocityPointing").style.display = "none";
             //document.getElementById("pointPickerContainer").style.display = "none";
@@ -231,6 +232,7 @@ var PointingPoker = function () {
             document.getElementById("newGameContainer").style.display = observer ? "none" : "block";
             document.getElementById("pointPickerContainer").style.display = observer ? "none" : "block";
             document.getElementById("linkExit").style.display = "";
+            document.getElementById("linkMenu").style.display = "";
             //document.getElementById("linkStoryPointing").style.display = "";
             //document.getElementById("linkVelocityPointing").style.display = "";
             document.getElementById("resultsContainer").style.display = "block";
