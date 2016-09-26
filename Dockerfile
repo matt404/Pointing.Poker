@@ -1,28 +1,17 @@
-FROM ubuntu:16.04
+FROM node:argon
 
 MAINTAINER matt404 <docker@mswis.com>
 
-# update the OS
-RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN apt-get update
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# install dependencies
-RUN apt-get -y install curl npm
-RUN npm cache clean -f
-RUN npm install -g n
-RUN n stable
+# Install app dependencies
+COPY package.json /usr/src/app/
+RUN npm install
 
-# use changes to package.json to force Docker not to use the cache
-# when we change our application's nodejs dependencies:
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+# Bundle app source
+COPY . /usr/src/app
 
-# Load application layer last to preserve caching
-WORKDIR /opt/app
-ADD . /opt/app
-
-EXPOSE 3000
-
-CMD ["node", "app.js"]
+EXPOSE 8080
+CMD [ "npm", "start" ]
