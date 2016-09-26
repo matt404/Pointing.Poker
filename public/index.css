@@ -76,6 +76,10 @@ div#memberContainer span.ticked{
   padding-right: 22px;
 }
 
+div#gameContainer-velocity{
+  margin-top:20px;
+}
+
 span.member-tag {
   margin-right:4px;
 }

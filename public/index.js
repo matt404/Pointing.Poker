@@ -1,7 +1,7 @@
 
 var PointingPoker = function () {
 
-    var _socket, _clientKey, _memberId, _roomKey;
+    var _clientKey, _memberId, _roomKey;
 
     var socket = io();
 
@@ -49,8 +49,8 @@ var PointingPoker = function () {
     };
 
     var closeWebSocket = function () {
-        //if (_socket.readyState === 1) {
-        //    _socket.close();
+        //if (socket.readyState === 1) {
+        //    socket.close();
         //}
     };
 
@@ -58,6 +58,16 @@ var PointingPoker = function () {
         document.getElementById("memberContainer").innerHTML = "";
         document.getElementById("resultsContainer").innerHTML = "";
         resetGameState();
+    };
+
+    var getNum = function(elName, defaulVal){
+      var elValue = document.getElementById(elName).value;
+      if(elValue*0 === 0){
+        elValue = elValue*1;
+      }else{
+        elValue = defaulVal;
+      }
+      return elValue;
     };
 
     var getQSValue = function (key) {
@@ -186,11 +196,36 @@ var PointingPoker = function () {
     init();
 
     return {
-        exitRoom: function () {
-            disposeGame();
-            closeWebSocket();
-            this.showForm();
-        },
+      calculateVelocity: function () {
+        var inputPctCapS3 = getNum('inputPercentCapacity-S-3',100);
+        var inputPctCapS2 = getNum('inputPercentCapacity-S-2',100);
+        var inputPctCapS1 = getNum('inputPercentCapacity-S-1',100);
+        var inputPctCapSN = getNum('inputPercentCapacity-SN',100);
+        var inputCompletedS3 = getNum('inputPointsCompleted-S-3',0);
+        var inputCompletedS2 = getNum('inputPointsCompleted-S-2',0);
+        var inputCompletedS1 = getNum('inputPointsCompleted-S-1',0);
+        var spanSprintNextEstimate = document.getElementById('spanSprintNextEstimate');
+
+        var estimateValue = Math.ceil(((inputCompletedS3/(inputPctCapS3/100)) +
+                            (inputCompletedS2/(inputPctCapS2/100)) +
+                            (inputCompletedS1/(inputPctCapS1/100))) / 3) *
+                            (inputPctCapSN/100);
+
+        document.getElementById('inputPercentCapacity-S-3').value = inputPctCapS3;
+        document.getElementById('inputPercentCapacity-S-2').value = inputPctCapS2;
+        document.getElementById('inputPercentCapacity-S-1').value = inputPctCapS1;
+        document.getElementById('inputPercentCapacity-SN').value = inputPctCapSN;
+        document.getElementById('inputPointsCompleted-S-3').value = inputCompletedS3;
+        document.getElementById('inputPointsCompleted-S-2').value = inputCompletedS2;
+        document.getElementById('inputPointsCompleted-S-1').value = inputCompletedS1;
+
+        spanSprintNextEstimate.innerHTML = estimateValue;
+      },
+      exitRoom: function () {
+          disposeGame();
+          closeWebSocket();
+          this.showForm();
+      },
         selectVote: function (element, vote) {
 
             var pointPickerContainer = document.getElementById('pointPickerContainer');
