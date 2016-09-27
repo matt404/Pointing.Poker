@@ -7,6 +7,8 @@ group, thereby facilitating important discussion.
 
 #### Develop and Debug
 
+*Working with NodeJS and Redis natively*
+
 First install the dependencies:
 
 * PointingPoker requires Redis, some options include:
