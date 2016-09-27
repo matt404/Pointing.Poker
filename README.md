@@ -63,7 +63,7 @@ docker network create ppoker_default
 
 docker run -d --name ppoker_redis -v redis:/var/lib/redis/data --net ppoker_default -p 6379:6379 redis
 
-docker run -d -p 3000:3000 --net ppoker_default --link ppoker_redis:redis -e "REDIS_ADDR=ppoker_redis" -i -t matt404:pointingpoker
+docker run -d --name ppoker_app -p 3000:3000 --net ppoker_default --link ppoker_redis:redis -e "REDIS_ADDR=ppoker_redis" -i -t matt404/pointingpoker
 ```
 
 To publish the docker image to docker hub:
