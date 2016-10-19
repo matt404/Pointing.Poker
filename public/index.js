@@ -1,7 +1,9 @@
 
 var PointingPoker = function () {
 
-    var _socket, _clientKey, _memberId, _roomKey;
+    var _clientKey, _memberId, _roomKey;
+
+    var socket = io();
 
     var init = function () {
         window.onload = load;
@@ -10,24 +12,46 @@ var PointingPoker = function () {
 
     var load = function () {
         setLoginFormDefaults();
+        socket.on('vote', setMemberVote);
+        socket.on('add', addMember);
+        socket.on('remove', removeMember);
+        socket.on('showcards', showCards);
+        socket.on('newgame', resetGameState);
     };
 
-    var addMember = function (name, observer) {
-        var MemberAction = {
-            action: "add",
+    var addMemberEmit = function (name, observer) {
+
+      //console.log("addMemberEmit", name, observer);
+
+        var member = {
             name: name,
             observer: observer,
             vote: "",
             clientKey: _clientKey,
             roomKey: _roomKey
         };
-        _socket.send(JSON.stringify(MemberAction));
+
+        socket.emit('add', member);
+
+    };
+
+    var addMember = function (member) {
+
+      //console.log("addMember", member);
+
+      printMemberElement(member);
+
+      if (_clientKey === parseInt(member.clientKey, 10)) {
+          _memberId = member.id;
+          PointingPoker.hideForm(member.observer);
+      }
+
     };
 
     var closeWebSocket = function () {
-        if (_socket.readyState === 1) {
-            _socket.close();
-        }
+        //if (socket.readyState === 1) {
+        //    socket.close();
+        //}
     };
 
     var disposeGame = function () {
@@ -36,16 +60,14 @@ var PointingPoker = function () {
         resetGameState();
     };
 
-    var getWebSocketPath = function () {
-        var loc = window.location, newUri;
-        if (loc.protocol === "https:") {
-            newUri = "wss:";
-        } else {
-            newUri = "ws:";
-        }
-        newUri += "//" + loc.host;
-        newUri += loc.pathname + "member/actions";
-        return newUri;
+    var getNum = function(elName, defaulVal){
+      var elValue = document.getElementById(elName).value;
+      if(elValue*0 === 0){
+        elValue = elValue*1;
+      }else{
+        elValue = defaulVal;
+      }
+      return elValue;
     };
 
     var getQSValue = function (key) {
@@ -62,39 +84,6 @@ var PointingPoker = function () {
             }
         }
         return val;
-    };
-
-    var onMessage = function (event) {
-//		console.log(event);
-        var member = JSON.parse(event.data);
-
-        switch (member.action) {
-            case 'vote':
-                setMemberVote(member);
-                break;
-
-            case 'add':
-                printMemberElement(member);
-
-                if (_clientKey === parseInt(member.clientKey, 10)) {
-                    _memberId = parseInt(member.id, 10);
-                    PointingPoker.hideForm(member.observer);
-                }
-                break;
-
-            case 'remove':
-                removeMember(member);
-                break;
-
-            case 'showcards':
-                showCards();
-                break;
-
-            case 'newgame':
-                resetGameState();
-                break;
-        }
-
     };
 
     var printMemberElement = function (member) {
@@ -169,6 +158,10 @@ var PointingPoker = function () {
     var setLoginFormDefaults = function () {
         var savedRoomKey = localStorage.getItem('pointingpoker:roomkey');
         var username = localStorage.getItem('pointingpoker:username');
+        var isObserver = localStorage.getItem('pointingpoker:observer');
+        if(typeof(isObserver) === "string" && isObserver !== ""){
+          document.getElementById("selectObserver").value = isObserver;
+        }
         var qsRoomKey = getQSValue("room");
         if (typeof (savedRoomKey) === "string" && savedRoomKey !== "") {
             if (typeof (qsRoomKey) === "string" && qsRoomKey !== "") {
@@ -203,11 +196,36 @@ var PointingPoker = function () {
     init();
 
     return {
-        exitRoom: function () {
-            disposeGame();
-            closeWebSocket();
-            this.showForm();
-        },
+      calculateVelocity: function () {
+        var inputPctCapS3 = getNum('inputPercentCapacity-S-3',100);
+        var inputPctCapS2 = getNum('inputPercentCapacity-S-2',100);
+        var inputPctCapS1 = getNum('inputPercentCapacity-S-1',100);
+        var inputPctCapSN = getNum('inputPercentCapacity-SN',100);
+        var inputCompletedS3 = getNum('inputPointsCompleted-S-3',0);
+        var inputCompletedS2 = getNum('inputPointsCompleted-S-2',0);
+        var inputCompletedS1 = getNum('inputPointsCompleted-S-1',0);
+        var spanSprintNextEstimate = document.getElementById('spanSprintNextEstimate');
+
+        var estimateValue = Math.ceil(((inputCompletedS3/(inputPctCapS3/100)) +
+                            (inputCompletedS2/(inputPctCapS2/100)) +
+                            (inputCompletedS1/(inputPctCapS1/100))) / 3) *
+                            (inputPctCapSN/100);
+
+        document.getElementById('inputPercentCapacity-S-3').value = inputPctCapS3;
+        document.getElementById('inputPercentCapacity-S-2').value = inputPctCapS2;
+        document.getElementById('inputPercentCapacity-S-1').value = inputPctCapS1;
+        document.getElementById('inputPercentCapacity-SN').value = inputPctCapSN;
+        document.getElementById('inputPointsCompleted-S-3').value = inputCompletedS3;
+        document.getElementById('inputPointsCompleted-S-2').value = inputCompletedS2;
+        document.getElementById('inputPointsCompleted-S-1').value = inputCompletedS1;
+
+        spanSprintNextEstimate.innerHTML = estimateValue;
+      },
+      exitRoom: function () {
+          disposeGame();
+          closeWebSocket();
+          this.showForm();
+      },
         selectVote: function (element, vote) {
 
             var pointPickerContainer = document.getElementById('pointPickerContainer');
@@ -216,26 +234,27 @@ var PointingPoker = function () {
                 pointPickerContainer.childNodes[i].className = "card";
             }
             element.className = "card selected";
-            var MemberAction = {
+            var member = {
                 action: "vote",
                 vote: vote,
                 id: _memberId,
                 clientKey: _clientKey,
                 roomKey: _roomKey
             };
-            _socket.send(JSON.stringify(MemberAction));
+            socket.emit('vote', member);
         },
         newGame: function () {
-            var MemberAction = {
+            var member = {
                 action: "newgame",
                 clientKey: _clientKey,
                 roomKey: _roomKey
             };
-            _socket.send(JSON.stringify(MemberAction));
+            socket.emit('newgame', member);
         },
         showForm: function () {
             document.getElementById("newGameContainer").style.display = "none";
             document.getElementById("linkExit").style.display = "none";
+            document.getElementById("linkMenu").style.display = "none";
             document.getElementById("linkStoryPointing").style.display = "none";
             document.getElementById("linkVelocityPointing").style.display = "none";
             //document.getElementById("pointPickerContainer").style.display = "none";
@@ -245,38 +264,39 @@ var PointingPoker = function () {
             document.getElementById("gameContainer-task").style.display = "block";
         },
         hideForm: function (observer) {
-            if (!observer) {
-                document.getElementById("newGameContainer").style.display = "block";
-                //document.getElementById("pointPickerContainer").style.display = "block";
-            }
+            document.getElementById("newGameContainer").style.display = observer ? "none" : "block";
+            document.getElementById("pointPickerContainer").style.display = observer ? "none" : "block";
             document.getElementById("linkExit").style.display = "";
-            document.getElementById("linkStoryPointing").style.display = "";
-            document.getElementById("linkVelocityPointing").style.display = "";
+            document.getElementById("linkMenu").style.display = "";
+            //document.getElementById("linkStoryPointing").style.display = "";
+            //document.getElementById("linkVelocityPointing").style.display = "";
             document.getElementById("resultsContainer").style.display = "block";
             document.getElementById("memberContainer").style.display = "block";
             document.getElementById("roomEntryContainer").style.display = "none";
             document.getElementById("gameContainer-task").style.display = "block";
         },
         formSubmit: function () {
+
             var name = document.getElementById("inputName").value;
             _roomKey = document.getElementById("inputRoomKey").value;
-            var observer = eval(document.getElementById("selectObserver").value);
+            var isObserver = document.getElementById("selectObserver").value;
+            if(typeof(isObserver) === "string" && isObserver !== ""){
+              isObserver = JSON.parse(isObserver);
+            }else{
+              isObserver = false;
+            }
             if (name !== "" && _roomKey !== "") {
-                _clientKey = parseInt(Math.random() * 1000000, 10);
-                var wsPath = getWebSocketPath();
-                _socket = new WebSocket(wsPath + "/" + _clientKey + "/" + window.escape(_roomKey));
-                _socket.onmessage = onMessage;
-                _socket.onopen = function () {
-                    localStorage.setItem('pointingpoker:roomkey', _roomKey);
-                    localStorage.setItem('pointingpoker:username', name);
-                    addMember(name, observer);
-                };
+                _clientKey = parseInt(Math.random() * 10000000, 10);
+                localStorage.setItem('pointingpoker:roomkey', _roomKey);
+                localStorage.setItem('pointingpoker:username', name);
+                localStorage.setItem('pointingpoker:observer', isObserver);
+                addMemberEmit(name, isObserver);
             }
         },
-        
+
         setGameType: function (gameType) {
             switch(gameType){
-                case "task": 
+                case "task":
                     document.getElementById("linkStoryPointing").className = "active";
                     document.getElementById("linkVelocityPointing").className = "";
                     document.getElementById("gameContainer-task").style.display = "block";
@@ -290,9 +310,9 @@ var PointingPoker = function () {
                     break;
             }
         },
-        
+
         submitVelocityVote: function(vote){
-            
+
         }
     };
 }();

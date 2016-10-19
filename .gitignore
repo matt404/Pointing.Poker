@@ -1,2 +1,4 @@
+npm-debug.log
 build
 /dist/
+node_modules
