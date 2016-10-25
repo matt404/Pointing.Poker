@@ -1,7 +1,8 @@
 
 var PointingPoker = function () {
 
-    var _clientKey, _memberId, _roomKey;
+    var _clientKey, _memberId, _roomKey,
+    _gaID = 'UA-53681854-2';
 
     var socket = io();
 
@@ -226,6 +227,9 @@ var PointingPoker = function () {
           closeWebSocket();
           this.showForm();
       },
+      gaload: function() {
+        ga('create', _gaID, 'auto', 'enterPointing');
+      },
         selectVote: function (element, vote) {
 
             var pointPickerContainer = document.getElementById('pointPickerContainer');
@@ -290,6 +294,11 @@ var PointingPoker = function () {
                 localStorage.setItem('pointingpoker:roomkey', _roomKey);
                 localStorage.setItem('pointingpoker:username', name);
                 localStorage.setItem('pointingpoker:observer', isObserver);
+                ga('enterPointing.set', {
+                  user: name,
+                  room: _roomKey,
+                  observer: isObserver
+                });
                 addMemberEmit(name, isObserver);
             }
         },
