@@ -126,6 +126,8 @@
 
       var roomKey = socket.roomKey;
 
+      //console.log("disconnect: ", roomKey, socket.id, n1, n2, n3);
+
       io.to(roomKey).emit('remove', {id:socket.id});
 
       redisClient.get(roomCachePrefix+roomKey, function (err, val) {

@@ -10,9 +10,9 @@
   },
   "license": "BSD",
   "dependencies": {
-    "express": "4.13.4",
-    "redis": "^2.6.2",
-    "socket.io": "1.4.8",
-    "socket.io-redis": "^1.0.0"
+    "express": "4.14.1",
+    "redis": "^2.6.5",
+    "socket.io": "1.7.2",
+    "socket.io-redis": "^3.1.0"
   }
 }
