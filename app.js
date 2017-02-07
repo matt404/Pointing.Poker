@@ -25,6 +25,12 @@
 
   app.use(express.static(__dirname + '/public'));
 
+  app.get('/rooms/:roomKey/members', function (req, res) {
+    redisClient.get(roomCachePrefix+req.params.roomKey, function (err, val) {
+      res.send(val);
+    });
+  });
+
   io.on('connection', function (socket) {
 
     socket.on('add', function (data) {
@@ -47,7 +53,7 @@
               socket.emit('add', mbr);
             } else if(mbr.clientKey !== member.clientKey){
               io.to(roomKey).emit('remove', mbr);
-              members.splice(i, i+1);
+              members.splice(i, 1);
             }
           }
 
@@ -142,7 +148,7 @@
           for(var i=memberCount-1; i >= 0; i--){
             var mbr = members[i];
             if(mbr.id === socket.id){
-              members.splice(i, i+1);
+              members.splice(i, 1);
               break;
             }
           }
