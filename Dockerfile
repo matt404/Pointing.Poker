@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:14.11.0
 
 MAINTAINER matt404 <docker@mswis.com>
 
