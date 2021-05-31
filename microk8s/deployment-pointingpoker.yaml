@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pointingpoker-deployment
+  labels:
+    app: pointingpoker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pointingpoker
+  template:
+    metadata:
+      labels:
+        app: pointingpoker
+    spec:
+      containers:
+        - name: pointingpoker
+          image: matt404/pointingpoker:v31
+          env:
+            - name: REDIS_ADDR
+              value: "redis"
+          ports:
+            - containerPort: 3000
