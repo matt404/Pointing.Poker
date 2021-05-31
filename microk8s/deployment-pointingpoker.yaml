@@ -16,9 +16,11 @@ spec:
     spec:
       containers:
         - name: pointingpoker
-          image: matt404/pointingpoker:v31
+          image: matt404/pointingpoker:latest
           env:
             - name: REDIS_ADDR
               value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
           ports:
             - containerPort: 3000
