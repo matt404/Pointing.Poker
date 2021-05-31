@@ -34,6 +34,10 @@ To build the docker container:
 
 `docker build -t matt404/pointingpoker .`
 
+Build for Arm processors:
+
+`docker buildx build --platform linux/arm64,linux/arm/v7 -t matt404/pointingpoker .`
+
 To run the application in a local docker container:
 
 ```
