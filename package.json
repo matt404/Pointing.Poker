@@ -10,7 +10,7 @@
   },
   "license": "BSD",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "redis": "^3.1.2",
     "socket.io": "^4.1.2",
     "socket.io-redis": "^6.1.1"
